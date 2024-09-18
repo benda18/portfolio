@@ -24,20 +24,18 @@ nyt <- nyt[nchar(nyt) == 5]
 #               unlist()) == 5]
 
 # explore----
-solution <- "saber"
-guess    <- "fully" #"gulpy"  #"bulky" # "match"  # "resin"
+solution <- "sa"
+guess    <- sample(nyt, size = 1) #"fully" #"gulpy"  #"bulky" # "match"  # "resin"
+c("fleas", "terga", "soupy", "siker", "sedan", "serac", "saber")
 
-not.ltrs <- c("r", "e", "s", "i", "n", 
-              "m", "a", "t", "c", "h", 
-              "b", "k", 
-              "g", "p")
-#not.ltrs <- "r"
+not.ltrs <- c("f", "l", "t", "g", "o", "u", "i", "k", 
+              "d", "n", "c")
 
 l1 <- NA
-l2 <- "u"
-l3 <- "l"
+l2 <- "a"
+l3 <- NA
 l4 <- NA
-l5 <- "y"
+l5 <- NA
 
 # compare guess to solution (letter & placement)
 
@@ -49,7 +47,7 @@ gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
 
 gue.lo <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) %in% 
                      unlist(strsplit(x = solution, split = ""))]
-gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lp)
+gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lo)
 
 #gue.lo <- not.ltrs
 
@@ -60,14 +58,14 @@ gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, s
 
 # new list----
 
-nyt %>%
+nyt <- nyt %>%
   .[!grepl(pattern = paste(not.ltrs, # gue.not,
                            sep = "|", collapse = "|"), 
            x = .)] %>% # remove words with not-permitted letters
-  #.[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"), 
-  #        x = .)] %>%
+  .[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"),
+         x = .)] %>%
   .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
           x = .)]
 
-
+nyt
 
