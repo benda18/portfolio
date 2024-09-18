@@ -9,143 +9,65 @@ renv::snapshot()
 renv::status()
 
 rm(list=ls());cat('\f')
-gc()
+
 
 # build dataset----
 nyt    <- lexicon::grady_augmented 
 
 # 5 letter words only
 nyt <- nyt[nchar(nyt) == 5]
-# no duplicate letters
-nyt <- nyt[(strsplit(nyt, "") %>%
-              lapply(., unique) %>%
-              lapply(., length) %>%
-              unlist()) == 5]
+
+# # no duplicate letters
+# nyt <- nyt[(strsplit(nyt, "") %>%
+#               lapply(., unique) %>%
+#               lapply(., length) %>%
+#               unlist()) == 5]
+
+# explore----
+solution <- "saber"
+guess    <- "fully" #"gulpy"  #"bulky" # "match"  # "resin"
+
+not.ltrs <- c("r", "e", "s", "i", "n", 
+              "m", "a", "t", "c", "h", 
+              "b", "k", 
+              "g", "p")
+#not.ltrs <- "r"
+
+l1 <- NA
+l2 <- "u"
+l3 <- "l"
+l4 <- NA
+l5 <- "y"
+
+# compare guess to solution (letter & placement)
+
+gue.lp <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) == 
+                     unlist(strsplit(x = solution, split = ""))]
+gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
+
+# compare guess to solution (letter only)
+
+gue.lo <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) %in% 
+                     unlist(strsplit(x = solution, split = ""))]
+gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lp)
+
+#gue.lo <- not.ltrs
+
+# get guessed letters that aren't in solution
+gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, split = "")) %in% gue.lo]
 
 
 
+# new list----
 
-# # play----
-# solution <- "leach"
-# guess    <- "beach"
-# 
-# sample(nyt, size = 1)
-# 
-# 
-# nyt <- nyt[(nyt %>% 
-#                strsplit(., "") %>%
-#                lapply(., nth, n = 1) %>%
-#                unlist()) == ""]
-# nyt <- nyt[(nyt %>% 
-#               strsplit(., "") %>%
-#               lapply(., nth, n = 2) %>%
-#               unlist()) == "e"]
-# nyt <- nyt[(nyt %>% 
-#               strsplit(., "") %>%
-#               lapply(., nth, n = 3) %>%
-#               unlist()) == "a"]
-# nyt <- nyt[(nyt %>% 
-#               strsplit(., "") %>%
-#               lapply(., nth, n = 4) %>%
-#               unlist()) == "c"]
-# nyt <- nyt[(nyt %>% 
-#               strsplit(., "") %>%
-#               lapply(., nth, n = 5) %>%
-#               unlist()) == "h"]
-# 
-# 
-# guess.output <- NULL
-# for(i in 1:5){
-#   guess.output[i] <- (strsplit(guess, "") %>%
-#      lapply(X = ., 
-#             FUN = nth, 
-#             n = i) %>%
-#      unlist()) == (strsplit(solution, "") %>%
-#                      lapply(X = ., 
-#                             FUN = nth, 
-#                             n = i) %>%
-#                      unlist())
-# }
-# rightLtr_rightPlc <- unlist(strsplit(guess, ""))[guess.output]
-# names(rightLtr_rightPlc) <- as.character(which(guess.output))
-# 
-# rightLtr_rightPlc %>% as.data.frame() %>% t() %>% as_tibble()
-# 
-# # 
-# # # older----
-# # l.nyt  <- strsplit(nyt, "")
-# # df.nyt <- data.frame(word = nyt,
-# #                      l1 = unlist(lapply(X = l.nyt,
-# #                                         FUN = nth,
-# #                                         n   = 1)),
-# #                      l2 = unlist(lapply(X = l.nyt,
-# #                                         FUN = nth,
-# #                                         n   = 2)),
-# #                      l3 = unlist(lapply(X = l.nyt,
-# #                                         FUN = nth,
-# #                                         n   = 3)),
-# #                      l4 = unlist(lapply(X = l.nyt,
-# #                                         FUN = nth,
-# #                                         n   = 4)),
-# #                      l5 = unlist(lapply(X = l.nyt,
-# #                                         FUN = nth,
-# #                                         n   = 5))) %>% as_tibble()
-# # rm(l.nyt, nyt)
-# # 
-# # # solution word ----
-# # solution <- "argue"
-# # sample(x = df.nyt$word, size = 1)
-# # 
-# # # guesses ----
-# # sample(x = df.nyt$word, size = 1)
-# # 
-# # g1 <- "paeon"
-# # g2 <- "ictus" # sample(df.word$word,1)
-# # 
-# # # exact 
-# # unlist(strsplit(solution, "")) == 
-# #   unlist(strsplit(g1, ""))
-# # 
-# # p1.imp <- letters[!letters %in% unlist(strsplit(solution, ""))[unlist(strsplit(solution, "")) %in% 
-# #   unlist(strsplit(g1, ""))]]
-# # 
-# # 
-# # unlist(strsplit(solution, "")) == 
-# #   unlist(strsplit(g2, ""))
-# # 
-# # 
-# # #correct_letters <- c(NA)
-# # 
-# # l1 <- list(correct = NA, 
-# #            impossible = c(p1.imp))
-# # l2 <- list(correct = NA, 
-# #            impossible = c(p1.imp))
-# # l3 <- list(correct = NA, 
-# #            impossible = c(p1.imp))
-# # l4 <- list(correct = "u", 
-# #            impossible = c(p1.imp))
-# # l5 <- list(correct = NA, 
-# #            impossible = c(p1.imp))
-# # 
-# # 
-# # 
-# # df.word <- df.nyt
-# # 
-# # df.word <- df.word[df.word$l1 %in% unlist(ifelse(!is.na(l1$correct), 
-# #                                                  yes = l1$correct, 
-# #                                                  no = list(letters[!letters %in% l1$impossible]))) &
-# #                      df.word$l2 %in% unlist(ifelse(!is.na(l2$correct), 
-# #                                                    yes = l2$correct, 
-# #                                                    no = list(letters[!letters %in% l2$impossible]))) & 
-# #                      df.word$l3 %in% unlist(ifelse(!is.na(l3$correct), 
-# #                                                    yes = l3$correct, 
-# #                                                    no = list(letters[!letters %in% l3$impossible]))) & 
-# #                      df.word$l4 %in% unlist(ifelse(!is.na(l4$correct), 
-# #                                                    yes = l4$correct, 
-# #                                                    no = list(letters[!letters %in% l4$impossible]))) & 
-# #                      df.word$l5 %in% unlist(ifelse(!is.na(l5$correct), 
-# #                                                    yes = l5$correct, 
-# #                                                    no = list(letters[!letters %in% l5$impossible]))),]
-# # 
-# # df.word
-# # 
+nyt %>%
+  .[!grepl(pattern = paste(not.ltrs, # gue.not,
+                           sep = "|", collapse = "|"), 
+           x = .)] %>% # remove words with not-permitted letters
+  #.[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"), 
+  #        x = .)] %>%
+  .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
+          x = .)]
+
+
+
