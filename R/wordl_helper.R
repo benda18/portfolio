@@ -4,12 +4,56 @@ library(readr)
 library(curl)
 library(lexicon)
 library(glue)
+library(crayon)
 
 renv::snapshot()
 renv::status()
 
 rm(list=ls());cat('\f')
 
+# funs----
+guess_sol <- function(gue1 = "cakes", 
+                      sol1 = "sweet"){
+  require(crayon)
+  temp.g <- unlist(strsplit(gue1, ""))
+  temp.s <- unlist(strsplit(sol1, ""))
+  
+  out.df <- NULL
+  for(i in 1:5){
+    temp.g[i] == temp.s[i]
+    temp.g[i] %in% temp.s
+    
+    out.df <- rbind(out.df, 
+                    data.frame(ln = i, 
+                               ltr = temp.g[i], 
+                               green = temp.g[i] == temp.s[i], 
+                               yellow = temp.g[i] %in% temp.s))
+    
+  }
+  
+  out.v <- NULL
+  for(i in 1:nrow(out.df)){
+    if(out.df$green[i]){
+      #print("green")
+      out.v <- c(out.v, 
+                 bold(bgGreen(black(out.df$ltr[i]))))
+      
+    }else if(out.df$yellow[i]){
+      #print("yellow")
+      out.v <- c(out.v, 
+                 bgYellow(red(out.df$ltr[i])))
+      
+    }else{
+      out.v <- c(out.v, 
+                 out.df$ltr[i])
+      
+    }
+  }
+  
+  out.v <- paste(out.v, sep = "", collapse = "")
+  
+  return(out.v)
+}
 
 # build dataset----
 nyt    <- lexicon::grady_augmented 
@@ -24,18 +68,35 @@ nyt <- nyt[nchar(nyt) == 5]
 #               unlist()) == 5]
 
 # explore----
-solution <- "sa"
-guess    <- sample(nyt, size = 1) #"fully" #"gulpy"  #"bulky" # "match"  # "resin"
-c("fleas", "terga", "soupy", "siker", "sedan", "serac", "saber")
+wordl.fin <- F
 
-not.ltrs <- c("f", "l", "t", "g", "o", "u", "i", "k", 
-              "d", "n", "c")
+solution <- "sweat" #sample(nyt,size=1)
 
-l1 <- NA
-l2 <- "a"
-l3 <- NA
-l4 <- NA
-l5 <- NA
+#while(wordl.fin == F){
+  guess          <- sample(nyt, size = 1);cat(guess_sol(guess, solution))
+  
+  guess.outcomes <- list("rl" = unlist(strsplit(x = c("awest"), 
+                                                split = "")), 
+                         "wl" = unlist(strsplit(x = c("brnuvlhdpkzox"), 
+                                                  split = "")))
+  
+  # not ltrs
+  not.ltrs <- guess.outcomes$wl
+  
+  # yes ltrs
+  l1 <- NA
+  l2 <- NA
+  l3 <- "e"
+  l4 <- "a"
+  l5 <- "t"
+  
+ # wordl.fin <- T
+#}
+
+
+
+
+
 
 # compare guess to solution (letter & placement)
 
@@ -45,14 +106,15 @@ gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
 
 # compare guess to solution (letter only)
 
-gue.lo <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) %in% 
-                     unlist(strsplit(x = solution, split = ""))]
-gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lo)
+# gue.lo <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) %in% 
+#                      unlist(strsplit(x = solution, split = ""))]
+# gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lo)
+gue.lo <- guess.outcomes$rl
 
 #gue.lo <- not.ltrs
 
-# get guessed letters that aren't in solution
-gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, split = "")) %in% gue.lo]
+# # get guessed letters that aren't in solution
+# gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, split = "")) %in% gue.lo]
 
 
 
@@ -60,8 +122,7 @@ gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, s
 
 nyt <- nyt %>%
   .[!grepl(pattern = paste(not.ltrs, # gue.not,
-                           sep = "|", collapse = "|"), 
-           x = .)] %>% # remove words with not-permitted letters
+                           sep = "|", collapse = "|"), x = .)] %>% # remove words with not-permitted letters
   .[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"),
          x = .)] %>%
   .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
@@ -69,3 +130,11 @@ nyt <- nyt %>%
 
 nyt
 
+
+
+
+
+# sample(c(letters,LETTERS,0:9), size = 12, replace = T) %>%
+#   paste(., sep = "", collapse = "")
+
+# "2ltrCdOD8FSs"
