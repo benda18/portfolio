@@ -61,72 +61,60 @@ nyt    <- lexicon::grady_augmented
 # 5 letter words only
 nyt <- nyt[nchar(nyt) == 5]
 
-# # no duplicate letters
-# nyt <- nyt[(strsplit(nyt, "") %>%
-#               lapply(., unique) %>%
-#               lapply(., length) %>%
-#               unlist()) == 5]
-
 # explore----
 wordl.fin <- F
 
-solution <- "sweat" #sample(nyt,size=1)
+solution <- "smoke" #sample(nyt,size=1)
 
 #while(wordl.fin == F){
   guess          <- sample(nyt, size = 1);cat(guess_sol(guess, solution))
   
-  guess.outcomes <- list("rl" = unlist(strsplit(x = c("awest"), 
+  guess.outcomes <- list("rl" = unlist(strsplit(x = c("so"), 
                                                 split = "")), 
-                         "wl" = unlist(strsplit(x = c("brnuvlhdpkzox"), 
+                         "wl" = unlist(strsplit(x = c("tichalnr"), 
                                                   split = "")))
   
   # not ltrs
-  not.ltrs <- guess.outcomes$wl
+  #not.ltrs <- guess.outcomes$wl
   
   # yes ltrs
-  l1 <- NA
+  l1 <- "s"
   l2 <- NA
-  l3 <- "e"
-  l4 <- "a"
-  l5 <- "t"
+  l3 <- "o"
+  l4 <- NA
+  l5 <- "e"
   
  # wordl.fin <- T
 #}
 
-
-
-
-
-
-# compare guess to solution (letter & placement)
+  # compare guess to solution (letter & placement)
 
 gue.lp <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) == 
                      unlist(strsplit(x = solution, split = ""))]
 gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
 
 # compare guess to solution (letter only)
-
-# gue.lo <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) %in% 
-#                      unlist(strsplit(x = solution, split = ""))]
-# gue.lo <- ifelse(length(gue.lo) == 0, NA, gue.lo)
 gue.lo <- guess.outcomes$rl
-
-#gue.lo <- not.ltrs
-
-# # get guessed letters that aren't in solution
-# gue.not <- unlist(strsplit(x = guess, split = ""))[!unlist(strsplit(x = guess, split = "")) %in% gue.lo]
-
 
 
 # new list----
 
 nyt <- nyt %>%
-  .[!grepl(pattern = paste(not.ltrs, # gue.not,
+  .[!grepl(pattern = paste(guess.outcomes$wl, 
                            sep = "|", collapse = "|"), x = .)] %>% # remove words with not-permitted letters
   .[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"),
          x = .)] %>%
   .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
           x = .)]
+ 
+if(length(guess.outcomes$rl) == 5){
+  nyt <- nyt[(lapply(FUN = `%in%`, 
+              strsplit(nyt,""),
+              as.list(c(guess.outcomes$rl))) %>%
+         lapply(., all) %>%
+         unlist() %>%
+         which())]
+}
 
 nyt
 
