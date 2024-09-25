@@ -64,25 +64,31 @@ nyt <- nyt[nchar(nyt) == 5]
 # explore----
 wordl.fin <- F
 
-solution <- "smoke" #sample(nyt,size=1)
+solution <- "" #sample(nyt,size=1)
 
 #while(wordl.fin == F){
   guess          <- sample(nyt, size = 1);cat(guess_sol(guess, solution))
   
-  guess.outcomes <- list("rl" = unlist(strsplit(x = c("so"), 
+  nyt[grepl(pattern = "[h]", nyt) & 
+    grepl(pattern = "[t]", nyt) & 
+      grepl(pattern = "[r]", nyt) &
+      !grepl(pattern = "[aunew]", nyt)] %>%
+    sample(., size = 1)
+  
+  guess.outcomes <- list("rl" = unlist(strsplit(x = c("htr"), 
                                                 split = "")), 
-                         "wl" = unlist(strsplit(x = c("tichalnr"), 
+                         "wl" = unlist(strsplit(x = c("aunew"), 
                                                   split = "")))
   
   # not ltrs
   #not.ltrs <- guess.outcomes$wl
   
   # yes ltrs
-  l1 <- "s"
+  l1 <- "t"
   l2 <- NA
-  l3 <- "o"
+  l3 <- "r"
   l4 <- NA
-  l5 <- "e"
+  l5 <- NA
   
  # wordl.fin <- T
 #}
@@ -98,6 +104,15 @@ gue.lo <- guess.outcomes$rl
 
 
 # new list----
+# grep(pattern = "[ht]", x = c("haunt", "theme", "testy", "zebra", "phone"), 
+#      value = T)
+# grepl(pattern = "[h]", x = c("haunt", "theme", "testy", "zebra", "phone")) & 
+#   grepl(pattern = "[t]", x = c("haunt", "theme", "testy", "zebra", "phone"))
+# 
+# 
+# lapply(X = list("[h]", "[t]"), 
+#        FUN = grepl, 
+#        x = c("haunt", "theme", "testy", "zebra", "phone")) 
 
 nyt <- nyt %>%
   .[!grepl(pattern = paste(guess.outcomes$wl, 
