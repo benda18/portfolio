@@ -8,8 +8,8 @@ status()
 rm(list=ls());cat('\f')
 
 # vars----
-outer.ltrs <- "itgamn"
-inner.ltr  <- "d"
+outer.ltrs <- "htenla"
+inner.ltr  <- "o"
 nyt        <- lexicon::grady_augmented
 
 # cleanup----
@@ -21,11 +21,28 @@ not.letters <- not.letters[!not.letters %in% inner.ltr]
 # analysis---
 # only words with given letters
 
-nyt[grepl(pattern = paste(outer.ltrs, sep = "|", collapse = "|"), x = nyt) |
+panogram.nyt <- nyt[grepl(pattern = paste(outer.ltrs, sep = "|", collapse = "|"), x = nyt) |
       grepl(pattern = paste(inner.ltr, sep = "|", collapse = "|"), x = nyt) ] %>%
   .[!grepl(paste(not.letters, sep = "|", collapse = "|"), x = .)] %>%
   .[grepl(inner.ltr, x = .)] %>%
   .[nchar(.) >= 4]
+
+panogram.nyt[grepl(inner.ltr, panogram.nyt) & 
+  grepl(outer.ltrs[1], panogram.nyt)& 
+  grepl(outer.ltrs[2], panogram.nyt)& 
+  grepl(outer.ltrs[3], panogram.nyt)& 
+  grepl(outer.ltrs[4], panogram.nyt)&
+  grepl(outer.ltrs[5], panogram.nyt)&
+  grepl(outer.ltrs[6], panogram.nyt)]
+
+nyt <- nyt[grepl(pattern = paste(outer.ltrs, sep = "|", collapse = "|"), x = nyt) |
+      grepl(pattern = paste(inner.ltr, sep = "|", collapse = "|"), x = nyt) ] %>%
+  .[!grepl(paste(not.letters, sep = "|", collapse = "|"), x = .)] %>%
+  .[grepl(inner.ltr, x = .)] %>%
+  .[nchar(.) >= 4] 
+
+
+nyt[nchar(nyt) == max(nchar(nyt))-1]
 
 # all.letters <- nyt[grepl(outer.ltrs[1], nyt) & 
 #       grepl(outer.ltrs[2], nyt) & 

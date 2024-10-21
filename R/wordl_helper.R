@@ -67,28 +67,28 @@ wordl.fin <- F
 solution <- "" #sample(nyt,size=1)
 
 #while(wordl.fin == F){
-  guess          <- sample(nyt, size = 1);cat(guess_sol(guess, solution))
-  
+guess          <- sample(nyt, size = 1);cat(guess_sol(guess, solution))
+
   nyt[grepl(pattern = "[h]", nyt) & 
     grepl(pattern = "[t]", nyt) & 
       grepl(pattern = "[r]", nyt) &
       !grepl(pattern = "[aunew]", nyt)] %>%
     sample(., size = 1)
   
-  guess.outcomes <- list("rl" = unlist(strsplit(x = c("htr"), 
+  guess.outcomes <- list("rl" = unlist(strsplit(x = c("moy"), 
                                                 split = "")), 
-                         "wl" = unlist(strsplit(x = c("aunew"), 
+                         "wl" = unlist(strsplit(x = c("auckelnistd"), 
                                                   split = "")))
   
   # not ltrs
   #not.ltrs <- guess.outcomes$wl
   
   # yes ltrs
-  l1 <- "t"
-  l2 <- NA
-  l3 <- "r"
+  l1 <- "m"
+  l2 <- "o"
+  l3 <- NA
   l4 <- NA
-  l5 <- NA
+  l5 <- "y"
   
  # wordl.fin <- T
 #}
@@ -134,10 +134,7 @@ if(length(guess.outcomes$rl) == 5){
 nyt
 
 
+nyt[grepl("^mo.*y$", nyt)] %>% 
+  .[nchar(.) == 5] %>%
+  .[!grepl("e|t|u|i|a|s|d|k|l|c|n", .)]
 
-
-
-# sample(c(letters,LETTERS,0:9), size = 12, replace = T) %>%
-#   paste(., sep = "", collapse = "")
-
-# "2ltrCdOD8FSs"
