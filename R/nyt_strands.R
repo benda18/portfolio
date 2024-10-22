@@ -1,5 +1,8 @@
+library(dplyr)
+library(lexicon)
 
 rm(list=ls());cat('\f')
+
 nyt <- lexicon::grady_augmented
 
 ltrs.yes <- "foifce"

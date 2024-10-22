@@ -8,7 +8,7 @@ status()
 rm(list=ls());cat('\f')
 
 # vars----
-outer.ltrs <- "htenla"
+outer.ltrs <- "glarmh"
 inner.ltr  <- "o"
 nyt        <- lexicon::grady_augmented
 
@@ -42,7 +42,9 @@ nyt <- nyt[grepl(pattern = paste(outer.ltrs, sep = "|", collapse = "|"), x = nyt
   .[nchar(.) >= 4] 
 
 
+nyt[nchar(nyt) == max(nchar(nyt))-0]
 nyt[nchar(nyt) == max(nchar(nyt))-1]
+nyt[nchar(nyt) == max(nchar(nyt))-2]
 
 # all.letters <- nyt[grepl(outer.ltrs[1], nyt) & 
 #       grepl(outer.ltrs[2], nyt) & 
