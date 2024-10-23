@@ -9,6 +9,8 @@ status()
 snapshot()
 
 rm(list=ls())
+# BANJOFIDDLE
+sample(c(letters,LETTERS,0:9,"!"), size = 13) %>% paste(., sep = "", collapse = "")
 
 # web resources----
 
@@ -45,3 +47,4 @@ airportlist <- base::readRDS(file = "airport_list.rds")
 
 names(airportlist)
 airportlist$airports
+
