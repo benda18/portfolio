@@ -117,6 +117,7 @@ for(i in which(sudok.poss == 0)){
 
 
 
+
 lapply(81, fi)
 
 sudok.list <- list()

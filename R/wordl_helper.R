@@ -64,7 +64,7 @@ nyt <- nyt[nchar(nyt) == 5]
 # explore----
 wordl.fin <- F
 
-solution <- "petty" #sample(nyt,size=1)
+solution <- "shout" #sample(nyt,size=1)
 
 #while(wordl.fin == F){
 (guess          <- sample(nyt, size = 1))#;cat(guess_sol(guess, solution))
@@ -75,9 +75,9 @@ solution <- "petty" #sample(nyt,size=1)
       !grepl(pattern = "^ma", nyt)] %>%
     sample(., size = 1)
   
-  guess.outcomes <- list("rl" = unlist(strsplit(x = c("pety"), 
+  guess.outcomes <- list("rl" = unlist(strsplit(x = c("oth"), 
                                                 split = "")), 
-                         "wl" = unlist(strsplit(x = c("rosdancml"), 
+                         "wl" = unlist(strsplit(x = c("wrpey"), 
                                                   split = "")))
   
   # not ltrs
@@ -134,8 +134,19 @@ if(length(guess.outcomes$rl) == 5){
 nyt
 
 
-nyt[grepl("a", nyt)] %>%
+nyt[grepl("t", nyt)] %>% 
   .[grepl("o", .)] %>%
+  .[grepl("h", .)] %>%
+  .[!grepl("^..t..$", .)] %>%
+  .[!grepl("^.o...$", .)] %>%
+  .[!grepl("^....h$", .)] %>%
+  #.[grepl("^...t.$", .)] %>%
+  #.[!grepl("s$", .)]
+  strsplit(., "") %>%
+  #lapply(., nth, 5) %>%
+  unlist() %>%
+  table()
+  #.[grepl("o", .)] %>%
   .[nchar(.) == 5] #%>%
   #.[!grepl("d|e|b|i|t|c|u|r|v|y", .)]
 
