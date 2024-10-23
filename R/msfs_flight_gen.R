@@ -64,16 +64,5 @@ cw_runw <- airportlist$cw_runways %>% .["wikipedia_link" != names(.)]
 cw_nava <- airportlist$cw_navaids %>% .["wikipedia_link" != names(.)]
 cw_freq <- airportlist$cw_freq %>% .["wikipedia_link" != names(.)]
 
-df_all <- left_join(airp, 
-                    cw_coun) %>%
-  left_join(., 
-            cw_reg) %>%
-  left_join(., 
-            cw_runw) %>%
-  left_join(., 
-            cw_nava) %>%
-  left_join(., cw_freq)
+df_all <- left_join(airp, cw_runw, by = c("ident" = "airport_ident")) 
 
-df_all %>%
-  group_by(continent) %>%
-  summarise(n = n())
