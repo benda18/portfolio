@@ -24,10 +24,24 @@ cw_runways   <- read_csv("https://raw.githubusercontent.com/davidmegginson/ourai
 cw_freq      <- read_csv("https://raw.githubusercontent.com/davidmegginson/ourairports-data/refs/heads/main/airport-frequencies.csv")
 cw_navaids   <- read_csv("https://raw.githubusercontent.com/davidmegginson/ourairports-data/refs/heads/main/navaids.csv")
 
-saveRDS(object = list(airports, 
-                      cw_countries, 
-                      cw_regions, 
-                      cw_runways, 
-                      cw_freq, 
-                      cw_navaids), 
+apl <- list(airports,
+            cw_countries,
+            cw_regions,
+            cw_runways,
+            cw_freq,
+            cw_navaids)
+
+names(apl) <- c("airports", 
+                "cw_countries",
+                "cw_regions",
+                "cw_runways",
+                "cw_freq",
+                "cw_navaids")
+
+saveRDS(object = apl,
         file = "airport_list.rds")
+
+
+airportlist <- base::readRDS(file = "airport_list.rds")
+
+names(airportlist) <- "foo"
