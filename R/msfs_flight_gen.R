@@ -66,3 +66,20 @@ cw_freq <- airportlist$cw_freq %>% .["wikipedia_link" != names(.)]
 
 df_all <- left_join(airp, cw_runw, by = c("ident" = "airport_ident")) 
 
+df_all.open <- df_all[df_all$type != "closed",]
+
+df_all.open$type %>% unique()
+
+df_all.open$name[which(df_all.open$ident == "KLAX")]
+
+df_all.open %>%
+  .[grepl(pattern = "^K.[3,3]$", x = .$ident),] %>%
+  group_by(ident, local_code, gps_code, name) %>%
+  summarise()
+
+# remove columns unneeded----
+
+df_all.open[!colnames(df_all.open) %in% "home_link"]
+
+head(as.data.frame(df_all.open))
+tail(as.data.frame(df_all.open))

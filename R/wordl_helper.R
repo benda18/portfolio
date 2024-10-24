@@ -64,39 +64,39 @@ nyt <- nyt[nchar(nyt) == 5]
 # explore----
 wordl.fin <- F
 
-solution <- "shout" #sample(nyt,size=1)
+solution <- "bossy" #sample(nyt,size=1)
 
 #while(wordl.fin == F){
 (guess          <- sample(nyt, size = 1))#;cat(guess_sol(guess, solution))
 
-  nyt[grepl(pattern = "", nyt) & 
-    grepl(pattern = "", nyt) & 
+nyt[grepl(pattern = "", nyt) & 
+      grepl(pattern = "", nyt) & 
       grepl(pattern = "", nyt) &
       !grepl(pattern = "^ma", nyt)] %>%
-    sample(., size = 1)
-  
-  guess.outcomes <- list("rl" = unlist(strsplit(x = c("oth"), 
-                                                split = "")), 
-                         "wl" = unlist(strsplit(x = c("wrpey"), 
-                                                  split = "")))
-  
-  # not ltrs
-  #not.ltrs <- guess.outcomes$wl
-  
-  # yes ltrs
-  l1 <- NA
-  l2 <- NA
-  l3 <- NA
-  l4 <- NA
-  l5 <- NA
-  
- # wordl.fin <- T
+  sample(., size = 1)
+
+guess.outcomes <- list("rl" = unlist(strsplit(x = c("so"), 
+                                              split = "")), 
+                       "wl" = unlist(strsplit(x = c("huterl"), 
+                                              split = "")))
+
+# not ltrs
+#not.ltrs <- guess.outcomes$wl
+
+# yes ltrs
+l1 <- NA
+l2 <- "o"
+l3 <- NA
+l4 <- NA
+l5 <- NA
+
+# wordl.fin <- T
 #}
 
-  # compare guess to solution (letter & placement)
+# compare guess to solution (letter & placement)
 
 gue.lp <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) == 
-                     unlist(strsplit(x = solution, split = ""))]
+                                                    unlist(strsplit(x = solution, split = ""))]
 gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
 
 # compare guess to solution (letter only)
@@ -118,35 +118,60 @@ nyt <- nyt %>%
   .[!grepl(pattern = paste(guess.outcomes$wl, 
                            sep = "|", collapse = "|"), x = .)] %>% # remove words with not-permitted letters
   .[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"),
-         x = .)] %>%
+          x = .)] %>%
   .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
           x = .)]
- 
+
 if(length(guess.outcomes$rl) == 5){
   nyt <- nyt[(lapply(FUN = `%in%`, 
-              strsplit(nyt,""),
-              as.list(c(guess.outcomes$rl))) %>%
-         lapply(., all) %>%
-         unlist() %>%
-         which())]
+                     strsplit(nyt,""),
+                     as.list(c(guess.outcomes$rl))) %>%
+                lapply(., all) %>%
+                unlist() %>%
+                which())]
 }
 
-nyt
 
 
-nyt[grepl("t", nyt)] %>% 
-  .[grepl("o", .)] %>%
-  .[grepl("h", .)] %>%
-  .[!grepl("^..t..$", .)] %>%
-  .[!grepl("^.o...$", .)] %>%
-  .[!grepl("^....h$", .)] %>%
-  #.[grepl("^...t.$", .)] %>%
-  #.[!grepl("s$", .)]
+lexicon::grady_augmented %>%
+  .[nchar(.) == 5] %>%
+  #nyt %>%
+  # guessed probably not letters
+  #.[!grepl("f|d", .)] %>% 
+  # guessed probably yes letters
+  #.[grepl("y", .)] %>%
+  # generic confirmed, unplaced letters
+  #.[grepl("s", .)] %>% 
+  # generic ruled out letters
+  .[!grepl("h", .)] %>% 
+  .[!grepl("u", .)] %>% 
+  .[!grepl("t", .)] %>% 
+  .[!grepl("r", .)] %>% 
+  .[!grepl("l", .)] %>% 
+  .[!grepl("e", .)] %>% 
+  .[!grepl("n", .)] %>% 
+  .[!grepl("i", .)] %>% 
+  # first letter in/out
+  .[!grepl("^s....$", .)] %>%
+  # 2nd letter in/out
+  .[grepl("^.o...$", .)] %>%
+  # 3rd letter in/out
+  .[!grepl("^..o..$", .)] %>%
+  # 4th letter in/out
+  .[grepl("^...s.$", .)] %>%
+  # last letter in/out
+  .[grepl("^....y$", .)] %>%
+  .[!grepl("^....s$", .)] %>% #grep("d", ., value = T)
+  # do some more stuff
   strsplit(., "") %>%
   #lapply(., nth, 5) %>%
   unlist() %>%
-  table()
-  #.[grepl("o", .)] %>%
-  .[nchar(.) == 5] #%>%
-  #.[!grepl("d|e|b|i|t|c|u|r|v|y", .)]
+  table() %>%
+  sort()
+
+sample(c("bossy", "mossy"), 
+       size = 10001, replace = T) %>% table() %>%
+  prop.table(
+    
+  )
 
