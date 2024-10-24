@@ -55,94 +55,16 @@ guess_sol <- function(gue1 = "cakes",
   return(out.v)
 }
 
-# build dataset----
-nyt    <- lexicon::grady_augmented 
 
-# 5 letter words only
-nyt <- nyt[nchar(nyt) == 5]
-
-# explore----
-wordl.fin <- F
-
-solution <- "bossy" #sample(nyt,size=1)
-
-#while(wordl.fin == F){
-(guess          <- sample(nyt, size = 1))#;cat(guess_sol(guess, solution))
-
-nyt[grepl(pattern = "", nyt) & 
-      grepl(pattern = "", nyt) & 
-      grepl(pattern = "", nyt) &
-      !grepl(pattern = "^ma", nyt)] %>%
-  sample(., size = 1)
-
-guess.outcomes <- list("rl" = unlist(strsplit(x = c("so"), 
-                                              split = "")), 
-                       "wl" = unlist(strsplit(x = c("huterl"), 
-                                              split = "")))
-
-# not ltrs
-#not.ltrs <- guess.outcomes$wl
-
-# yes ltrs
-l1 <- NA
-l2 <- "o"
-l3 <- NA
-l4 <- NA
-l5 <- NA
-
-# wordl.fin <- T
-#}
-
-# compare guess to solution (letter & placement)
-
-gue.lp <- unlist(strsplit(x = guess, split = ""))[unlist(strsplit(x = guess, split = "")) == 
-                                                    unlist(strsplit(x = solution, split = ""))]
-gue.lp <- ifelse(length(gue.lp) == 0, NA, gue.lp)
-
-# compare guess to solution (letter only)
-gue.lo <- guess.outcomes$rl
-
-
-# new list----
-# grep(pattern = "[ht]", x = c("haunt", "theme", "testy", "zebra", "phone"), 
-#      value = T)
-# grepl(pattern = "[h]", x = c("haunt", "theme", "testy", "zebra", "phone")) & 
-#   grepl(pattern = "[t]", x = c("haunt", "theme", "testy", "zebra", "phone"))
-# 
-# 
-# lapply(X = list("[h]", "[t]"), 
-#        FUN = grepl, 
-#        x = c("haunt", "theme", "testy", "zebra", "phone")) 
-
-nyt <- nyt %>%
-  .[!grepl(pattern = paste(guess.outcomes$wl, 
-                           sep = "|", collapse = "|"), x = .)] %>% # remove words with not-permitted letters
-  .[grepl(pattern = paste(gue.lo, sep = "|", collapse = "|"),
-          x = .)] %>%
-  .[grepl(pattern = glue("[{ifelse(is.na(l1), paste(letters, sep = \"\", collapse = \"\"), l1)}][{ifelse(is.na(l2), paste(letters, sep = \"\", collapse = \"\"), l2)}][{ifelse(is.na(l3), paste(letters, sep = \"\", collapse = \"\"), l3)}][{ifelse(is.na(l4), paste(letters, sep = \"\", collapse = \"\"), l4)}][{ifelse(is.na(l5), paste(letters, sep = \"\", collapse = \"\"), l5)}]"), 
-          x = .)]
-
-if(length(guess.outcomes$rl) == 5){
-  nyt <- nyt[(lapply(FUN = `%in%`, 
-                     strsplit(nyt,""),
-                     as.list(c(guess.outcomes$rl))) %>%
-                lapply(., all) %>%
-                unlist() %>%
-                which())]
-}
-
-
-
-lexicon::grady_augmented %>%
-  .[nchar(.) == 5] %>%
-  #nyt %>%
-  # guessed probably not letters
+# get dictionary of 5 letter words
+lexicon::grady_augmented %>% .[nchar(.) == 5] %>%
+  # guessed probably-not letters
   #.[!grepl("f|d", .)] %>% 
-  # guessed probably yes letters
+  # guessed probably-yes letters
   #.[grepl("y", .)] %>%
   # generic confirmed, unplaced letters
   #.[grepl("s", .)] %>% 
-  # generic ruled out letters
+  # generic ruled-out letters
   .[!grepl("h", .)] %>% 
   .[!grepl("u", .)] %>% 
   .[!grepl("t", .)] %>% 
@@ -169,9 +91,12 @@ lexicon::grady_augmented %>%
   table() %>%
   sort()
 
-sample(c("bossy", "mossy"), 
-       size = 10001, replace = T) %>% table() %>%
-  prop.table(
-    
-  )
 
+# tie breaker
+var1 <- "bossy"
+var2 <- "mossy"
+
+tb <- sample(c(var1, var2), 
+       size = 10001, replace = T) %>% 
+  table() %>%
+  prop.table(); names(which(tb == max(tb)))
