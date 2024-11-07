@@ -728,3 +728,4 @@ durco <- read_tsv(durco)
 
 durco
 View(durco)
+plot(durco)
