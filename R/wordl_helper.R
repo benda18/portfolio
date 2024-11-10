@@ -12,7 +12,7 @@ renv::status()
 # https://web.ma.utexas.edu/users/rusin/wordle/wordlist.html
 rm(list=ls());cat('\f')
 
-yesterday.word <- "event"
+yesterday.word <- "swell"
 
 # funs----
 nm1 <- function(x) {
@@ -23,8 +23,8 @@ nm1(66) # 99%
 nm1(199) # 100% 
 
 my_guess_stats <- function(n1 = 0, n2 = 0, 
-                           n3 = 2, n4 = 7, 
-                           n5 = 5, 
+                           n3 = 2, n4 = 8, 
+                           n5 = 6, 
                            n6 = 1, nl = 1){
   out <- nl * 0 + 
     n6 * 6 + 
@@ -94,45 +94,50 @@ readr::read_csv("data/wordle_list.csv")$x %>%
 # guessed probably-yes letters----
 # .[grepl("i", .)] %>%
 #   .[grepl("s", .)] %>%
-#  .[grepl("r", .)] %>%
+# .[grepl("r", .)] %>%
 #   .[grepl("a", .)] %>% 
-#  .[grepl("e", .)] %>%
-# generic confirmed, unplaced letters----
- #.[grepl("t", .)] %>% 
- # .[grepl("l", .)] %>%
-   .[grepl("e", .)] %>% 
+#   .[grepl("e", .)] %>%
+#   .[grepl("l", .)] %>%
+#   .[grepl("g", .)] %>%
+  # generic confirmed, unplaced letters----
+ .[grepl("e", .)] %>% 
+ .[grepl("l", .)] %>%
+ .[grepl("w", .)] %>% 
   # generic ruled-out letters----
-.[!grepl("r", .)] %>% 
-  .[!grepl("u", .)] %>%
-  .[!grepl("l", .)] %>%
-   .[!grepl("y", .)] %>%
-    .[!grepl("a", .)] %>%
-   .[!grepl("s", .)] %>%
-   .[!grepl("p", .)] %>%
-   .[!grepl("c", .)] %>%
+.[!grepl("y", .)] %>%
+  .[!grepl("m", .)] %>%
+  .[!grepl("p", .)] %>%
+   .[!grepl("h", .)] %>%
+    .[!grepl("f", .)] %>%
+   .[!grepl("r", .)] %>%
+   .[!grepl("a", .)] %>%
+   .[!grepl("t", .)] %>%
    .[!grepl("o", .)] %>%
-   .[!grepl("m", .)] %>%
-  .[!grepl("d", .)] %>%
-  .[!grepl("b", .)] %>%
-  .[!grepl("i", .)] %>%
+  # .[!grepl("o", .)] %>%
+  # .[!grepl("m", .)] %>%
+  # .[!grepl("d", .)] %>%
+  # .[!grepl("b", .)] %>%
+  # .[!grepl("i", .)] %>%
+  # ruled out double letters----
+# .[!grepl("e.*e", .)] %>%
   # first letter in/out----
-.[!grepl("^t....$", .)] %>%
+ .[!grepl("^l....$", .)] %>%
   #.[!grepl("^l....$", .)] %>%
-# 2nd letter in/out----
-.[!grepl("^.e...$", .)] %>%
-#.[grepl("^.r...$", .)] %>%
+  # 2nd letter in/out----
+ .[!grepl("^.e...$", .)] %>%
+# .[!grepl("^.e...$", .)] %>%
 # 3rd letter in/out----
-#.[!grepl("^..r..$", .)] %>%
-#.[grepl("^..n..$", .)] %>%
-# 4th letter in/out----
-.[!grepl("^...t.$", .)] %>%
+ .[!grepl("^..w..$", .)] %>%
+  #.[grepl("^..n..$", .)] %>%
+  # 4th letter in/out----
   .[!grepl("^...e.$", .)] %>%
-#.[!grepl("^...a.$", .)] %>% 
+#   .[!grepl("^...e.$", .)] %>%
+# .[!grepl("^...a.$", .)] %>% 
 #.[grepl("^...l.$", .)] %>%
 # last letter in/out----
-.[grepl("^....t$", .)] %>%
-#.[!grepl("^....e$", .)] %>% 
-#  sample(., 1)
+ # .[!grepl("^....r$", .)] %>%
+.[grepl("^....l$", .)] %>% 
+  sample(., 1)
 # do some more stuff----
 strsplit(., "") %>%
   unlist() %>%

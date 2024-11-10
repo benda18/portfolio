@@ -8,7 +8,7 @@ status()
 rm(list=ls());cat('\f')
 
 # vars----
-outer.ltrs <- "glarmh"
+outer.ltrs <- "radnut"
 inner.ltr  <- "o"
 nyt        <- lexicon::grady_augmented
 
