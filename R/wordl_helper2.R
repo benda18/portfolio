@@ -54,3 +54,36 @@ guess_sol <- function(gue1 = "cakes",
   
   return(out.v)
 }
+
+wrdl <- readr::read_csv("data/wordle_list.csv")$x
+sol  <- sample(wrdl,size=1)
+
+# GUESS 1----
+g1   <- sample(wrdl, size = 1)
+guess_sol(g1, sol) %>% cat()
+
+# GUESS 2----
+# must have at least 1 of the following letters:
+g2 <- grep(pattern = "e", x = wrdl, value = T) %>%
+  # must not have any of these letters: 
+  .[!grepl("p|u|r", .)] %>%
+  # must not have these letters in these positions: 
+  .[!grepl("^..e.$", .)] %>% 
+  # must have these letters in these positions: 
+  sample(., size = 1) 
+
+guess_sol(g2, sol) %>% cat()  
+
+# GUESS 3----
+grep(pattern = "e", x = wrdl, value = T) %>%
+  # must not have any of these letters: 
+  .[!grepl("p|u|r", .)] %>%
+  # must not have these letters in these positions: 
+  .[!grepl("^..e.$", .)]  
+  # must have these letters in these positions:
+
+# GUESS 4----
+
+# GUESS 5----
+
+# GUESS 6----

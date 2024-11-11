@@ -100,19 +100,19 @@ readr::read_csv("data/wordle_list.csv")$x %>%
 #   .[grepl("l", .)] %>%
 #   .[grepl("g", .)] %>%
   # generic confirmed, unplaced letters----
- .[grepl("e", .)] %>% 
- .[grepl("l", .)] %>%
- .[grepl("w", .)] %>% 
+ # .[grepl("e", .)] %>% 
+ # .[grepl("l", .)] %>%
+ # .[grepl("w", .)] %>% 
   # generic ruled-out letters----
-.[!grepl("y", .)] %>%
-  .[!grepl("m", .)] %>%
-  .[!grepl("p", .)] %>%
-   .[!grepl("h", .)] %>%
-    .[!grepl("f", .)] %>%
-   .[!grepl("r", .)] %>%
-   .[!grepl("a", .)] %>%
-   .[!grepl("t", .)] %>%
-   .[!grepl("o", .)] %>%
+# .[!grepl("y", .)] %>%
+#   .[!grepl("m", .)] %>%
+#   .[!grepl("p", .)] %>%
+#    .[!grepl("h", .)] %>%
+#     .[!grepl("f", .)] %>%
+#    .[!grepl("r", .)] %>%
+#    .[!grepl("a", .)] %>%
+#    .[!grepl("t", .)] %>%
+#    .[!grepl("o", .)] %>%
   # .[!grepl("o", .)] %>%
   # .[!grepl("m", .)] %>%
   # .[!grepl("d", .)] %>%
@@ -121,22 +121,22 @@ readr::read_csv("data/wordle_list.csv")$x %>%
   # ruled out double letters----
 # .[!grepl("e.*e", .)] %>%
   # first letter in/out----
- .[!grepl("^l....$", .)] %>%
+ #.[!grepl("^l....$", .)] %>%
   #.[!grepl("^l....$", .)] %>%
   # 2nd letter in/out----
- .[!grepl("^.e...$", .)] %>%
+ #.[!grepl("^.e...$", .)] %>%
 # .[!grepl("^.e...$", .)] %>%
 # 3rd letter in/out----
- .[!grepl("^..w..$", .)] %>%
+# .[!grepl("^..w..$", .)] %>%
   #.[grepl("^..n..$", .)] %>%
   # 4th letter in/out----
-  .[!grepl("^...e.$", .)] %>%
+ # .[!grepl("^...e.$", .)] %>%
 #   .[!grepl("^...e.$", .)] %>%
 # .[!grepl("^...a.$", .)] %>% 
 #.[grepl("^...l.$", .)] %>%
 # last letter in/out----
  # .[!grepl("^....r$", .)] %>%
-.[grepl("^....l$", .)] %>% 
+#.[grepl("^....l$", .)] %>% 
   sample(., 1)
 # do some more stuff----
 strsplit(., "") %>%
