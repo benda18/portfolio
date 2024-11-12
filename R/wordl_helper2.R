@@ -58,32 +58,43 @@ guess_sol <- function(gue1 = "cakes",
 wrdl <- readr::read_csv("data/wordle_list.csv")$x
 sol  <- sample(wrdl,size=1)
 
-# GUESS 1----
-g1   <- sample(wrdl, size = 1)
-guess_sol(g1, sol) %>% cat()
+g1 <- "stare"
+guess_sol(g1,sol) %>% cat()
 
-# GUESS 2----
-# must have at least 1 of the following letters:
-g2 <- grep(pattern = "e", x = wrdl, value = T) %>%
-  # must not have any of these letters: 
-  .[!grepl("p|u|r", .)] %>%
-  # must not have these letters in these positions: 
-  .[!grepl("^..e.$", .)] %>% 
-  # must have these letters in these positions: 
-  sample(., size = 1) 
+wrdl <- wrdl %>%
+  .[grepl("^s....$", .)] %>%
+  .[!grepl("^.t...$", .)] %>%
+  .[!grepl("^....e$", .)] %>%
+  .[!grepl("a", .)] %>%
+  .[!grepl("r", .)] %>%
+  .[grepl("t", .)] %>%
+  .[grepl("e", .)] 
+  
 
-guess_sol(g2, sol) %>% cat()  
 
-# GUESS 3----
-grep(pattern = "e", x = wrdl, value = T) %>%
-  # must not have any of these letters: 
-  .[!grepl("p|u|r", .)] %>%
-  # must not have these letters in these positions: 
-  .[!grepl("^..e.$", .)]  
-  # must have these letters in these positions:
+temp.l <- wrdl %>%
+  grep("^s....$", ., value = T) %>%
+  #grep("^.t...$", ., value = T) %>%
+  #grep("^..a..$", ., value = T) %>%
+  #grep("^...r.$", ., value = T) %>%
+  #grep("^....e$", ., value = T) %>%
+  strsplit(., "")
 
-# GUESS 4----
+cat('\f')
 
-# GUESS 5----
+randmode <- function(v){
+  require(dplyr)
+  v <- v %>% table() %>% as.data.frame() %>% tibble()
+  colnames(v) <- c("ltr", "freq")
+  v <- v[order(v$freq, decreasing = T),] 
+  
+  return(as.character(sample(slice_max(v, order_by = freq, n = 1, with_ties = T)$ltr, 
+         size = 1)))
+}
 
-# GUESS 6----
+randmode(unlist(lapply(temp.l, nth, 1)))
+randmode(unlist(lapply(temp.l, nth, 2)))
+randmode(unlist(lapply(temp.l, nth, 3)))
+randmode(unlist(lapply(temp.l, nth, 4)))
+randmode(unlist(lapply(temp.l, nth, 5)))
+
