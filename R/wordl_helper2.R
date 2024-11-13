@@ -5,6 +5,7 @@ library(curl)
 #library(lexicon)
 library(glue)
 library(crayon)
+library(data.table)
 
 renv::snapshot()
 renv::status()
@@ -56,45 +57,46 @@ guess_sol <- function(gue1 = "cakes",
 }
 
 wrdl <- readr::read_csv("data/wordle_list.csv")$x
-sol  <- sample(wrdl,size=1)
 
-g1 <- "stare"
-guess_sol(g1,sol) %>% cat()
+df_w <- tibble(wrd = wrdl) %>%
+  mutate(., 
+         l1 = substr(wrd, 1, 1),
+         l2 = substr(wrd, 2, 2), 
+         l3 = substr(wrd, 3, 3), 
+         l4 = substr(wrd, 4, 4), 
+         l5 = substr(wrd, 5, 5))
 
-wrdl <- wrdl %>%
-  .[grepl("^s....$", .)] %>%
-  .[!grepl("^.t...$", .)] %>%
-  .[!grepl("^....e$", .)] %>%
-  .[!grepl("a", .)] %>%
-  .[!grepl("r", .)] %>%
-  .[grepl("t", .)] %>%
-  .[grepl("e", .)] 
-  
+df_w
 
 
-temp.l <- wrdl %>%
-  grep("^s....$", ., value = T) %>%
-  #grep("^.t...$", ., value = T) %>%
-  #grep("^..a..$", ., value = T) %>%
-  #grep("^...r.$", ., value = T) %>%
-  #grep("^....e$", ., value = T) %>%
-  strsplit(., "")
 
-cat('\f')
+?data.table::melt()
 
-randmode <- function(v){
-  require(dplyr)
-  v <- v %>% table() %>% as.data.frame() %>% tibble()
-  colnames(v) <- c("ltr", "freq")
-  v <- v[order(v$freq, decreasing = T),] 
-  
-  return(as.character(sample(slice_max(v, order_by = freq, n = 1, with_ties = T)$ltr, 
-         size = 1)))
-}
+dfw_summary <- melt(as.data.table(df_w), 
+     id.vars = c("wrd"), 
+     variable.name = "ltr_pos", 
+     value.name = "ltr_val") %>%
+  #as_tibble() %>%
+  dcast(., 
+        wrd~ltr_val) %>%
+  as_tibble()
 
-randmode(unlist(lapply(temp.l, nth, 1)))
-randmode(unlist(lapply(temp.l, nth, 2)))
-randmode(unlist(lapply(temp.l, nth, 3)))
-randmode(unlist(lapply(temp.l, nth, 4)))
-randmode(unlist(lapply(temp.l, nth, 5)))
+melt(as.data.table(df_w), 
+     id.vars = c("wrd"), 
+     variable.name = "ltr_pos", 
+     value.name = "ltr_val") %>%
+  as_tibble() %>%
+  group_by(wrd,ltr_val) %>%
+  summarise(n = n())
+
+dfw_summary %>%
+  as.data.table() %>%
+  melt(., 
+       id.vars = "wrd") %>%
+  as_tibble() %>%
+  group_by(variable) %>%
+  summarise(n = n(), 
+            n1 = sum(value > 0),
+            avg_val = mean(value)) %>%
+  .[order(.$avg_val, decreasing = T),]
 
