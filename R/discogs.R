@@ -7,7 +7,7 @@ library(discogger)
 
 renv::snapshot()
 renv::status()
-# https://colinfay.me/data-vinyles-discogs-r/
 
-collection_complete <- jsonlite::fromJSON(txt = "http://colinfay.me/data/collection_complete.json", 
-                                          simplifyDataFrame = TRUE)
+# https://github.com/ewenme/discogger
+
+# DISCOGS_API_TOKEN <- "foo"
