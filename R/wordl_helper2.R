@@ -10,6 +10,11 @@ library(data.table)
 renv::snapshot()
 renv::status()
 
+# hL57&j72SQ0b3XGcbjPG97
+
+18364860
+877-662-7447
+
 # https://web.ma.utexas.edu/users/rusin/wordle/wordlist.html
 rm(list=ls());cat('\f')
 

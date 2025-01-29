@@ -66,6 +66,8 @@ sudok.blank <- Matrix(data = rep(0, 9*9),
                                       col = paste("c",1:9, sep = "")))
 
 
+sum(sudok.blank)
+sudok.blank
 #sudok.blank[1:81] <- 1:81
 
 
@@ -109,17 +111,13 @@ for(i in which(sudok.poss == 0)){
           !pn %in% sudok.poss[get.cells]))){ # number isn't in block
       print(pn)
       print(i)
-    } 
+    }else(
+      cat("\n")
+    ) 
   }
   
   
 }
 
-
-
-
-lapply(81, fi)
-
-sudok.list <- list()
 
 
