@@ -1,9 +1,12 @@
 # baseball game simulation
 
+
 library(dplyr)
 library(renv)
 library(igraph)
 
+snapshot()
+status()
 
 rm(list=ls());cat('\f')
 
