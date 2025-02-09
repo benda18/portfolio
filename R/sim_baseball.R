@@ -24,7 +24,8 @@ the.count <- function(){
 # AT BAT----
 pitch_outcome <- function(){
   choices <- list(choices = c("B", "S", "HBP", "foul", "1B", "2B", "3B", "HR"), 
-                  probs   = c(39.4,31.8, 0.24,   11.3, 15.5, 21.8, 27.5, 35.1))
+                  probs   = c(39.4,31.8, 0.24,   11.3, 2.7, 3.8, 4.7, 6.1))
+  
   
   
   n.lo <- 100-sum(choices$probs)
@@ -34,7 +35,9 @@ pitch_outcome <- function(){
   
   probs2 <- (probs / sum(probs)) 
   
-  (round(probs2*100, digits = 1)) %>% sum
+  (round(probs2*n.lo, digits = 1)) %>% sum
+  
+  probs3 <- round(probs2 * n.lo,1)
   
   outcome <- sample(x = choices$choices, size = 1, prob = choices$probs)
   
