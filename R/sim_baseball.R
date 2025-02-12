@@ -14,8 +14,8 @@ rm(list=ls());cat('\f')
 
 # functions----
 at.bat_outcome <- function(){
-  choices <- list(choices = c("B", "S", "HBP", "foul", "1B", "2B", "3B", "HR"), 
-                  probs   = c(39.4,31.8, 0.24,   11.3, 2.7, 3.8, 4.7, 6.1))
+  choices <- list(choices = c("B", "S", "HBP", "foul", "1B", "2B", "3B", "HR", "out"), 
+                  probs   = c(39.4,31.8, 0.24,   11.3, 2.7, 3.8, 4.7, 6.1, 20))
   
   outcome <- sample(x = choices$choices, size = 1, prob = choices$probs)
   
@@ -41,7 +41,7 @@ the.count <- function(atb, pB = 0, pS = 0, pO = 0,
     pS <- pS
   }
   # if 1b, 2b, 3b, 4b
-  if(atb %in% c("1B", "2B", "3B", "HR")){
+  if(atb %in% c("1B", "2B", "3B", "HR", "out")){
     # reset balls and strikes
     pB <- 0; pS <- 0
   }
@@ -65,7 +65,7 @@ the.count <- function(atb, pB = 0, pS = 0, pO = 0,
   }
   
   # if out
-  if(pS == 3){
+  if(pS == 3 | atb == "out"){
     pO <- pO + 1
     # pS <- 0
     # pB <- 0
@@ -114,20 +114,21 @@ while(po < 3 ){
   # was there just an out???
   if(po != temp.count[["pO"]]){
     po <- po + 1
-    print("-------out----------")
+    
+    print.out <- T
+    
     # reset count
-    var_reset.count <- T
+    pb <- 0
+    ps <- 0
+     var_reset.count <- T
   }else{
-    # don't reset count
+    print.out <- F
+  # don't reset count
     var_reset.count <- F
   }
   # /temp
   
-  # # was it the third out? 
-  # if(po == 3){
-  #   print("------INNING OVER-----")
-  #   po <- 0
-  # }  
+
   
   if(! var_reset.count){
     pb <- temp.count[["pB"]]
@@ -136,36 +137,60 @@ while(po < 3 ){
   }else{
     pb <- 0
     ps <- 0
-    # # was it the third out?
-    # if(po == 3){
-    #   print("------INNING OVER-----")
-    #   po <- 0
-    # }
   }
   
   
   print(unname(temp.count))
+  
+  # print stuff
+  
+  if(print.out & temp.count[["pS"]] < 3){
+    print("-------out----------")
+  } 
+  
+  if(print.out & temp.count[["pS"]] == 3){
+    print("----strikeout-------")
+  }
+  
+  
   # was it the third out?
   if(po == 3){
+    # reset count
+    pb <- 0
+    ps <- 0
+    
     print("------INNING OVER-----")
     #po <- 0 # this should be handled by the main loop
   }
-  
-  
   # when the batter advances (1b,2b,3b,hr,hbp,b&pb==4)
   if(abo %in% c("1B", "2B", "3B", "HR", "HBP") | 
      (abo == "B" & pb == 4 )){
-    print('batter advances')
+    
+    print.bat <- T
+    
+    # reset count
+    pb <- 0
+    ps <- 0
+    
     #print(abo)
     #print("---------------")
+  }else{
+    print.bat <- F
   }
-  # when the batter gets out (ps == 3)
-  # print(as.character(ps));Sys.sleep(0.25)
-  if(ps == 3){
-    #print(c(pb,ps,po))
-    print("strikeout")
-    #print("---------------")
+  
+  
+  if(print.bat){
+    print('batter advances')
   }
+  
+  
+  
+  # # when the batter gets out (ps == 3)
+  # # print(as.character(ps));Sys.sleep(0.25)
+  # if(temp.count[["pS"]] == 3){
+  #   print("strikeout")
+  #   
+  # }
   
   #rm(abo, temp.count)
   
