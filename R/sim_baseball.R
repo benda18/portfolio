@@ -110,7 +110,7 @@ while(po < 3 ){
                           pS  = ps, 
                           pO  = po, 
                           reset.count = F)
-  # temp
+  
   # was there just an out???
   if(po != temp.count[["pO"]]){
     po <- po + 1
@@ -126,9 +126,6 @@ while(po < 3 ){
   # don't reset count
     var_reset.count <- F
   }
-  # /temp
-  
-
   
   if(! var_reset.count){
     pb <- temp.count[["pB"]]
@@ -139,11 +136,10 @@ while(po < 3 ){
     ps <- 0
   }
   
-  
+  # print count
   print(unname(temp.count))
   
   # print stuff
-  
   if(print.out & temp.count[["pS"]] < 3){
     print("-------out----------")
   } 
@@ -152,7 +148,6 @@ while(po < 3 ){
     print("----strikeout-------")
   }
   
-  
   # was it the third out?
   if(po == 3){
     # reset count
@@ -160,7 +155,6 @@ while(po < 3 ){
     ps <- 0
     
     print("------INNING OVER-----")
-    #po <- 0 # this should be handled by the main loop
   }
   # when the batter advances (1b,2b,3b,hr,hbp,b&pb==4)
   if(abo %in% c("1B", "2B", "3B", "HR", "HBP") | 
@@ -172,27 +166,13 @@ while(po < 3 ){
     pb <- 0
     ps <- 0
     
-    #print(abo)
-    #print("---------------")
   }else{
     print.bat <- F
   }
-  
-  
   if(print.bat){
     print('batter advances')
   }
   
-  
-  
-  # # when the batter gets out (ps == 3)
-  # # print(as.character(ps));Sys.sleep(0.25)
-  # if(temp.count[["pS"]] == 3){
-  #   print("strikeout")
-  #   
-  # }
-  
-  #rm(abo, temp.count)
   
 }
 
