@@ -1,8 +1,7 @@
 # baseball game simulation
 
-
-library(dplyr)
 library(renv)
+library(dplyr)
 library(igraph)
 
 snapshot()
@@ -93,132 +92,127 @@ ps  <- 0
 po  <- 0
 pi  <- 1
 pit <- T
+
+var_team.ab <- 1
 var_reset.count <- F
 
 # THE INNING----
 n.error <- 0
 
-while(po < 3 ){
-  # error handling
-  n.error <- n.error + 1
-  stopifnot(n.error < 1000)
+sim_inning <- function(team.ab = var_team.ab, 
+                       game.inn = pi){
+  team.ab  <- team.ab * -1
   
-  # AT BAT----
-  abo <- at.bat_outcome()
-  temp.count <- the.count(atb = abo, 
-                          pB  = pb, 
-                          pS  = ps, 
-                          pO  = po, 
-                          reset.count = F)
   
-  # was there just an out???
-  if(po != temp.count[["pO"]]){
-    po <- po + 1
-    
-    print.out <- T
-    
-    # reset count
-    pb <- 0
-    ps <- 0
-     var_reset.count <- T
+  
+  if(game.inn == 1 & team.ab == -1){
+    game.inn <- game.inn + 0
   }else{
-    print.out <- F
-  # don't reset count
-    var_reset.count <- F
+    game.inn <- game.inn + 0.5
   }
+  # reset base runners
+  base_1 <- F
+  base_2 <- F
+  base_3 <- F
   
-  if(! var_reset.count){
-    pb <- temp.count[["pB"]]
-    ps <- temp.count[["pS"]]
-    po <- temp.count[["pO"]]
-  }else{
-    pb <- 0
-    ps <- 0
-  }
   
-  # print count
-  print(unname(temp.count))
   
-  # print stuff
-  if(print.out & temp.count[["pS"]] < 3){
-    print("-------out----------")
-  } 
-  
-  if(print.out & temp.count[["pS"]] == 3){
-    print("----strikeout-------")
-  }
-  
-  # was it the third out?
-  if(po == 3){
-    # reset count
-    pb <- 0
-    ps <- 0
+  while(po < 3 ){
+    # error handling
+    n.error <- n.error + 1
+    stopifnot(n.error < 1000)
     
-    print("------INNING OVER-----")
-  }
-  # when the batter advances (1b,2b,3b,hr,hbp,b&pb==4)
-  if(abo %in% c("1B", "2B", "3B", "HR", "HBP") | 
-     (abo == "B" & pb == 4 )){
+    # AT BAT----
+    abo <- at.bat_outcome()
+    temp.count <- the.count(atb = abo, 
+                            pB  = pb, 
+                            pS  = ps, 
+                            pO  = po, 
+                            reset.count = F)
     
-    print.bat <- T
+    # was there just an out???
+    if(po != temp.count[["pO"]]){
+      po <- po + 1
+      
+      print.out <- T
+      
+      # reset count
+      pb <- 0
+      ps <- 0
+      var_reset.count <- T
+    }else{
+      print.out <- F
+      # don't reset count
+      var_reset.count <- F
+    }
     
-    # reset count
-    pb <- 0
-    ps <- 0
+    if(! var_reset.count){
+      pb <- temp.count[["pB"]]
+      ps <- temp.count[["pS"]]
+      po <- temp.count[["pO"]]
+    }else{
+      pb <- 0
+      ps <- 0
+    }
     
-  }else{
-    print.bat <- F
-  }
-  if(print.bat){
-    print('batter advances')
+    # print count
+    print(unname(temp.count))
+    
+    # print stuff
+    if(print.out & temp.count[["pS"]] < 3){
+      print("-------out----------")
+    } 
+    
+    if(print.out & temp.count[["pS"]] == 3){
+      print("----strikeout-------")
+    }
+    
+    # was it the third out?
+    if(po == 3){
+      # reset count
+      pb <- 0
+      ps <- 0
+      
+      print("------INNING OVER-----")
+    }
+    # when the batter advances (1b,2b,3b,hr,hbp,b&pb==4)
+    if(abo %in% c("1B", "2B", "3B", "HR", "HBP") | 
+       (abo == "B" & pb == 4 )){
+      
+      print.bat <- T
+      
+      # reset count
+      pb <- 0
+      ps <- 0
+      
+    }else{
+      print.bat <- F
+    }
+    if(print.bat){
+      print('batter advances')
+    }
+    
+    # base runners
+    base_1 <- F
+    base_2 <- F
+    base_3 <- F
+    
+    
+    
   }
   
+  df.out <- data.frame(inning_num  = game.inn,
+                       team_id     = team.ab,
+                       team.hits   = NA, 
+                       team.errors = NA,
+                       team.abs    = NA, 
+                       team.runs   = NA)
   
+  return(df.out)
 }
 
 
-# at
-
-
-# older----
-
-
-# out.count   <- 0
-# team.id     <- -1
-# pitch.count <- c("B" = 0,"S" = 0)
-# inning.num  <- 0.5
-# 
-# 
-# game.over <- F; n <- 0
-# while(!game.over){
-#   # check safe
-#   n <- n+1
-#   stopifnot(n<10000)
-#   
-#   # play ball----
-#   # END OF INNING
-#   if(out.count == 3){
-#     team.id   <- team.id * -1
-#     out.count <- 0
-#     pitch.count <- c("B" = 0,"S" = 0)
-#     inning.num  <- inning.num + 0.5
-#   }
-#   
-#   # PITCH
-#   
-#   # strikeout
-#   
-#   # walk
-#   
-#   the.pitch <- c("strike", "ball", "hit")
-#   
-#   if(the.pitch == "strike"){
-#     pitch.count["S"] <- pitch.count["S"] + 1
-#   }
-#   
-#   
-#   
-#   
-# }
+(x <- sim_inning(1, 1))
+(x <- sim_inning(-1, 1))
 
 
