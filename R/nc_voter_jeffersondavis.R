@@ -34,3 +34,8 @@ for(i in 1:length(the.data)){
                             col_positions = fwf_empty(the.data[[i]]))
   
 }
+
+# the.data[which.page:(which.page+2)] %>% 
+#   lapply(., FUN = read_fwf, 
+#          col_positions = fwf_widths(c(10,34,100), 
+#                                     col_names = c("county", "voter_name", "zip")))
