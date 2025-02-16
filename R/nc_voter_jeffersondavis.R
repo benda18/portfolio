@@ -35,6 +35,9 @@ for(i in 1:length(the.data)){
   
 }
 
+# boo, just zipcodes not addresses
+
+
 # the.data[which.page:(which.page+2)] %>% 
 #   lapply(., FUN = read_fwf, 
 #          col_positions = fwf_widths(c(10,34,100), 
