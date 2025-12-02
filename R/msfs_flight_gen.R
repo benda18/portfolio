@@ -6,7 +6,7 @@ library(ggplot2)
 library(readr)
 
 status()
-snapshot()
+snapshot(exclude = "rgdal")
 
 rm(list=ls())
 
@@ -54,7 +54,7 @@ rm(list=ls())
 #         file = "airport_list.rds")
 
 rm(list=ls());cat('\f')
-airportlist <- base::readRDS(file = "airport_list.rds")
+airportlist <- base::readRDS(file = "data/airport_list.rds")
 
 names(airportlist)
 airp    <- airportlist$airports %>% .["wikipedia_link" != names(.)]
