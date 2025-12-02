@@ -63,6 +63,19 @@ guess_sol <- function(gue1 = "cakes",
 
 wrdl <- readr::read_csv("data/wordle_list.csv")$x
 
+# temp----
+
+wrdl %>%
+  grep("m", x = ., value = T) %>%
+  grep("a", x = ., value = T) %>%
+  grep("l", x = ., value = T) %>%
+  .[!grepl("^...a.$", x = .)] %>%
+  .[!grepl("^a....$", x = .)] %>%
+  .[!grepl("t|u|b|s|c|o|r|n|p|e", x = .)]
+# /temp
+
+
+
 df_w <- tibble(wrd = wrdl) %>%
   mutate(., 
          l1 = substr(wrd, 1, 1),

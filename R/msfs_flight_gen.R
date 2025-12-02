@@ -4,6 +4,9 @@ library(renv)
 library(dplyr)
 library(ggplot2)
 library(readr)
+library(leaflet)
+library(terra)
+library(geosphere)
 
 status()
 snapshot(exclude = "rgdal")
@@ -54,6 +57,13 @@ rm(list=ls())
 #         file = "airport_list.rds")
 
 rm(list=ls());cat('\f')
+
+# functions----
+me2mi <- function(m){
+  c(mi = m * 0.000621371)
+}
+# data----
+
 airportlist <- base::readRDS(file = "data/airport_list.rds")
 
 names(airportlist)
@@ -68,18 +78,62 @@ df_all <- left_join(airp, cw_runw, by = c("ident" = "airport_ident"))
 
 df_all.open <- df_all[df_all$type != "closed",]
 
-df_all.open$type %>% unique()
-
-df_all.open$name[which(df_all.open$ident == "KLAX")]
-
-df_all.open %>%
-  .[grepl(pattern = "^K.[3,3]$", x = .$ident),] %>%
-  group_by(ident, local_code, gps_code, name) %>%
-  summarise()
+# df_all.open$type %>% unique()
+# 
+# df_all.open$name[which(df_all.open$ident == "KLAX")]
+# 
+# df_all.open %>%
+#   #.[grepl(pattern = "^K.[3,3]$", x = .$ident),] %>%
+#   .[grepl(pattern = "^K", x = .$ident),] %>%
+#   group_by(ident, local_code, gps_code, name) %>%
+#   summarise()
 
 # remove columns unneeded----
+colnames(df_all.open) %>% sort()
+View(df_all.open)
 
-df_all.open[!colnames(df_all.open) %in% "home_link"]
+df_all.open <- df_all.open[!colnames(df_all.open) %in% "home_link"]
+
+df_all.open %>%
+  group_by(latitude_deg) %>%
+  summarise(n = n()) %>%
+  .$n %>%
+  table()
+
+# keep ident, latitude_deg, longitude_deg
+
+df_all.open[grepl("^NC", x = df_all.open$ident, ignore.case = T),]
+
 
 head(as.data.frame(df_all.open))
 tail(as.data.frame(df_all.open))
+
+
+# narrow down to certain airports----
+
+dep_apt <- "KSEZ"
+
+
+dep_apt <- df_all.open[df_all.open$ident == dep_apt,]
+
+
+arr_apt <- df_all.open[df_all.open$iso_country == "US" & 
+                         grepl("^K", df_all.open$ident),] %>%
+  .[sample(1:nrow(.), size = 10, replace = F),]
+
+
+
+df_out <- NULL
+for(i in 1:nrow(arr_apt)){
+  
+  df_out <- rbind(df_out, 
+                  data.frame(depapt = dep_apt$ident, 
+                             arrapt = arr_apt$ident[i], 
+                             dist_m = geosphere::distHaversine(p1 = c(dep_apt$longitude_deg, 
+                                                                      dep_apt$latitude_deg), 
+                                                               p2 = c(arr_apt$longitude_deg[i], 
+                                                                      arr_apt$latitude_deg[i])))) 
+}
+
+df_out$dist_mi <- me2mi(df_out$dist_m)
+
