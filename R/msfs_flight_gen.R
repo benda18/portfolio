@@ -100,6 +100,54 @@ df_all.open %>%
   .$n %>%
   table()
 
+# runways----
+df_rw <- df_all.open %>%
+  group_by(continent, iso_region, iso_country,
+           gps_code,
+           ident,
+           type,surface) %>%
+  summarise(lon = mean(longitude_deg, na.rm = T), 
+            lat = mean(latitude_deg, na.rm = T))
+
+
+df_rw$surface %>% unique()
+
+cw_surface <- data.frame(surface = sort(unique(df_rw$surface)), 
+                         cat     = NA) %>% as_tibble()
+
+sf.hard <- "concrete"
+sf.soft <- c("grass")
+
+cw_surface[grepl(x = cw_surface$surface, 
+                 pattern = "^a$|^c$|raised deck|^treated|^deck|^c0n|^con|^tar|^alum|^bit|bitu|asp|chip|concrete|mtal|met/con|apsh|ashp|cement|^pad|^met$|sealed|blacktop|granite|aluminium|roof|brick|aluminium|auminum|asfalt|ashpalt|asph|old asp|^hard$|asphalt|^con|^asp|tarmac|steel|paved|paving|pavement|metal", 
+                 ignore.case = T),]$cat <- "hard"
+cw_surface[grepl(x = cw_surface$surface, 
+                 pattern = "^gr$|^gre$|^arg$|^cla$|compactada|macadam|murram|^pi|soft|Saibro|rough|mixed|^san|grvl|^tuef|^gra|^none|^eerth|caliche|^torf|^coral|grain|silt|bituminous|ground|lakebed|^gvl$|graas|wood|shale|salt|Eartth|turf|gras|grs|earth|^grav|graded|loam|unsealed|crushed|^grv|mud|clay|^turf|^ter|unpaved|unpeved|sand|gravel|grass|dirt|^sod$|soil|stone", 
+                 ignore.case = T),]$cat <- "soft"
+cw_surface[grepl(x = cw_surface$surface, 
+                 pattern = "water|^wat$|snow|ice|^sno", 
+                 ignore.case = T),]$cat <- "water"
+
+cw_surface[is.na(cw_surface$cat),]$surface <- "unknown"
+
+
+df_rw <- mutate(df_rw, 
+                s_hard  = F,
+                s_soft  = F, 
+                s_water = F, 
+                s_unk   = F,
+                s_any = s_hard + s_soft + s_water + s_unk)
+
+df_all.open %>%
+  group_by(ident, gps_code, 
+           le_ident,
+           type, surface, lighted) %>%
+  summarise(n = n(), 
+            rw_len = NA, 
+            rw_wth = NA) #%>%
+#.[.$n > 1,]
+
+
 # keep ident, latitude_deg, longitude_deg
 
 df_all.open[grepl("^NC", x = df_all.open$ident, ignore.case = T),]
