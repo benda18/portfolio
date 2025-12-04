@@ -6,7 +6,7 @@ library(renv)
 library(dplyr)
 library(Matrix)
 
-renv::snapshot()
+renv::snapshot(exclude = "rgdal")
 renv::status()
 
 

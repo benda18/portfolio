@@ -66,6 +66,9 @@ me2mi <- function(m){
 
 airportlist <- base::readRDS(file = "data/airport_list.rds")
 
+
+
+
 names(airportlist)
 airp    <- airportlist$airports %>% .["wikipedia_link" != names(.)]
 cw_coun <- airportlist$cw_countries %>% .["wikipedia_link" != names(.)]
@@ -76,7 +79,15 @@ cw_freq <- airportlist$cw_freq %>% .["wikipedia_link" != names(.)]
 
 df_all <- left_join(airp, cw_runw, by = c("ident" = "airport_ident")) 
 
-df_all.open <- df_all[df_all$type != "closed",]
+df_all.open <- df_all#[df_all$type != "closed",]
+
+
+leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = airp$longitude_deg, lat = airp$latitude_deg, 
+                   clusterOptions = T, 
+                   label = airp$ident)
+
 
 # df_all.open$type %>% unique()
 # 
@@ -92,7 +103,7 @@ df_all.open <- df_all[df_all$type != "closed",]
 colnames(df_all.open) %>% sort()
 View(df_all.open)
 
-df_all.open <- df_all.open[!colnames(df_all.open) %in% "home_link"]
+#df_all.open <- df_all.open[!colnames(df_all.open) %in% "home_link"]
 
 df_all.open %>%
   group_by(latitude_deg) %>%
@@ -128,16 +139,41 @@ cw_surface[grepl(x = cw_surface$surface,
                  pattern = "water|^wat$|snow|ice|^sno", 
                  ignore.case = T),]$cat <- "water"
 
-cw_surface[is.na(cw_surface$cat),]$surface <- "unknown"
+cw_surface[is.na(cw_surface$cat),]$cat <- "unknown"
 
+df_rw <- left_join(df_rw, cw_surface)
 
-df_rw <- mutate(df_rw, 
-                s_hard  = F,
-                s_soft  = F, 
-                s_water = F, 
-                s_unk   = F,
-                s_any = s_hard + s_soft + s_water + s_unk)
+df_rw$cat[is.na(df_rw$cat)] <- "unknown"
 
+df_rw <- mutate(ungroup(df_rw), 
+                s_hard  = df_rw$cat == "hard",
+                s_soft  = df_rw$cat == "soft", 
+                s_water = df_rw$cat == "water", 
+                s_unk   = df_rw$cat == "unknown" | is.na(df_rw$cat))
+
+temp.map <- df_rw %>%
+  group_by(continent, iso_region, iso_country, gps_code, ident, 
+           type,
+           cat, 
+           #s_hard, s_soft, s_water, s_unk
+           ) %>%
+  summarise(n = n(), 
+            lon = mean(lon, na.rm = T), 
+            lat = mean(lat, na.rm = T)) %>%
+  .[sample(1:nrow(.), size = 10000, 
+           replace = F),]
+
+leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng   = temp.map$lon, 
+                   lat   = temp.map$lat, 
+                   label = temp.map$ident,
+                   clusterOptions = T) %>%
+  # leaflet::addAwesomeMarkers(lng = c(0,90), lat = c(0,45), label = c("0,0","90,45")) %>%
+  # leaflet::addGraticule()
+  leaflet::addScaleBar()  
+
+table(df_rw$type)
 df_all.open %>%
   group_by(ident, gps_code, 
            le_ident,
