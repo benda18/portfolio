@@ -66,11 +66,13 @@ sudok.blank <- Matrix(data = rep(0, 9*9),
                                       col = paste("c",1:9, sep = "")))
 
 
+
 sum(sudok.blank)
 sudok.blank
 #sudok.blank[1:81] <- 1:81
 
 
+# sudo start
 sudok.blank[1,c(2,3,5:7)] <- c(1,6,8,4,2)
 sudok.blank[2,c(2,4,7,8)] <- c(2,3,8,6)
 sudok.blank[3,c(2,6:9)] <- c(8,6,1,4,9)
@@ -81,11 +83,42 @@ sudok.blank[7,c(1:2, 6)] <- c(8,9,3)
 sudok.blank[8,c(2,5:6,9)] <- c(6,5,1,2)
 sudok.blank[9,c(5:8)] <- c(6,9,4,3)
 
+
+# discovered vals
+sudok.blank[14] <- 7
+sudok.blank[32] <- 3
+sudok.blank[35] <- 5
+sudok.blank[61] <- 7
+sudok.blank[79] <- 7
+
+sudok.blank[25] <- 5
+sudok.blank[27] <- 5
+sudok.blank[31] <- 9
+sudok.blank[34] <- 5
+sudok.blank[36] <- 5
+sudok.blank[49] <- 2
+sudok.blank[50] <- 2
+sudok.blank[60] <- 2
+sudok.blank[62] <- 1
+sudok.blank[74] <- 5
+sudok.blank[9] <- 5
+
+sudok.blank[13] <- 4
+sudok.blank[15] <- 7
+sudok.blank[18] <- 1
+sudok.blank[21] <- 3
+sudok.blank[28] <- 3
+sudok.blank[30] <- 3
+sudok.blank[39] <- 4
+sudok.blank[51] <- 5
+
 sudok.blank
 
 
 # get possibilities-----
 sudok.poss <- sudok.blank
+
+df.poss <- NULL
 
 for(i in which(sudok.poss == 0)){
   for(pn in 1:9){
@@ -110,7 +143,11 @@ for(i in which(sudok.poss == 0)){
           !pn %in% sudok.poss[,get.cn], # number isn't in col
           !pn %in% sudok.poss[get.cells]))){ # number isn't in block
       print(pn)
-      print(i)
+      print(as.character(i))
+      
+      df.poss <- rbind(df.poss, 
+                       data.frame(cell_n = as.character(i), 
+                                  poss_n = pn))
     }else(
       cat("\n")
     ) 
@@ -119,5 +156,14 @@ for(i in which(sudok.poss == 0)){
   
 }
 
+df.poss %>%
+  as_tibble() %>%
+  group_by(cell_n) %>%
+  summarise(n = n(), 
+            n_vals = n_distinct(poss_n), 
+            min_val = min(poss_n)) %>%
+  .[.$n_vals == 1,]
 
+
+# note: this is so fugged up right now
 

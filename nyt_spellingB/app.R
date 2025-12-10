@@ -36,8 +36,8 @@ server <- function(input, output) {
                  ignore.case = T)] %>%
     .[nchar(.) > 3]
   
-  req.ltr  <- "h"
-  opt.ltrs <- "ampuct"
+  req.ltr  <- "d"
+  opt.ltrs <- "txylea"
   not.ltrs <- letters[!letters %in% 
                         c(req.ltr,
                           unlist(strsplit(opt.ltrs,split="")))]
@@ -47,7 +47,7 @@ server <- function(input, output) {
   # cannot have
   temp.words <- var_dict[!var_dict %in% grep(pattern = paste(not.ltrs,sep = "|",collapse="|"), 
        x = var_dict, ignore.case = T, value = T)] %>%
-    grep("h", ., value = T)
+    grep(req.ltr, ., value = T)
   
   #temp.pangrams
   
@@ -58,7 +58,7 @@ server <- function(input, output) {
   
   temp.pangrams <- temp.words[temp.ul == 7]
   
-  table(temp.ul)
+  #table(temp.ul)
     # output$distPlot <- renderPlot({
     #     # generate bins based on input$bins from ui.R
     #     x    <- faithful[, 2]

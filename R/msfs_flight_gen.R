@@ -1,5 +1,6 @@
 # msfs flight generator
 
+
 library(renv)
 library(dplyr)
 library(ggplot2)
@@ -82,11 +83,19 @@ df_all <- left_join(airp, cw_runw, by = c("ident" = "airport_ident"))
 df_all.open <- df_all#[df_all$type != "closed",]
 
 
+df_all %>%
+  group_by(ident) %>%
+  summarise()
+
+
+df_all$type %>% table()
+
 leaflet() %>%
   addTiles() %>%
-  addCircleMarkers(lng = airp$longitude_deg, lat = airp$latitude_deg, 
+  addCircleMarkers(lng = airp$longitude_deg[airp$type != "closed"], 
+                   lat = airp$latitude_deg[airp$type != "closed"], 
                    clusterOptions = T, 
-                   label = airp$ident)
+                   label = paste(airp$ident, airp$type, sep = " - "))
 
 
 # df_all.open$type %>% unique()
